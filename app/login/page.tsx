@@ -1,15 +1,45 @@
-'use client';
+"use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { login } from "./action";
-import Image from "next/image";
-import { GuestLOgin } from "@/components/guest-login";
 import { motion } from "framer-motion";
-import { Github, Loader2, Lock, LogIn, Mail } from "lucide-react";
+import Link from "next/link";
+import { LogIn, Mail, Lock, Loader2, Github } from "lucide-react";
+import { useState } from "react";
+import { redirect } from "next/navigation";
 
-const LoginPage: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+
+const LoginPage = () => {
+
+  const [message, setMessage] = useState<string | null>(null);
+  const loading = false
+
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const checkbox  = formData.get("checkbox")
+   
+
+    console.log(email,password,checkbox)
+
+    // try {
+    //   const response = await signinUser({ variables: { email, password } });
+
+    //   if (response.data) {
+    //     const { token, user } = response.data.signinUser;
+    //     localStorage.setItem("authToken", token);
+    //     setMessage(`Welcome, ${user.name}!`);
+    //     console.log("succesfull oog")
+    //     redirect("/")
+    //   }
+    // } catch (err) {
+    //   setMessage("Login failed. Please try again.");
+    //   console.error("Login error:", err);
+    // }
+  };
+
+  console.log(message)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
@@ -40,11 +70,7 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-lg border border-gray-700"
         >
-          <form
-            action={login}
-            className="space-y-6"
-            onSubmit={() => setLoading(true)}
-          >
+          <form onSubmit={handleSignIn} className="space-y-6">
             <div className="space-y-4">
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -116,12 +142,11 @@ const LoginPage: React.FC = () => {
             </motion.button>
           </form>
 
-          {/* Error/message display can be conditionally added here */}
           {/* {error && <p className="mt-4 text-red-500 text-center">{error.message}</p>} */}
-          {/* {message && <p className="mt-4 text-green-500 text-center">{message}</p>} */}
+          {message && <p className="mt-4 text-green-500 text-center">{message}</p>}
 
           <p className="mt-6 text-center text-sm text-gray-400">
-            Don&apos;t have an account?{" "}
+            Don't have an account?{" "}
             <Link
               href="/register"
               className="text-blue-500 hover:text-blue-400 font-medium transition-colors"
